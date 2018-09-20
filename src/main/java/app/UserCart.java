@@ -1,4 +1,5 @@
 package app;
 
-public class UserCart {
+public class UserCart extends ProductStorage{
+
 }

@@ -1,5 +1,6 @@
 package app;
 
-public class Store {
+public class Store extends ProductStorage{
+
 
 }
