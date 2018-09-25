@@ -1,20 +1,24 @@
 package app;
 
 import java.util.*;
-import static app.Helper.listToJson;
+
+import static app.Helper.mapToJson;
 
 public abstract class ProductStorage {
+    /*Each record of a List is a row with 2 columns, which are implemented
+     * as an object array with 2 elements: {product, productCount}*/
     private List<Object[]> availableProducts = new ArrayList<>();
-    private Map<String, List> availableProductsMap = new HashMap<>();
-    private List availableProductsList = new ArrayList();
 
-    ProductStorage() {
-        availableProductsMap.put("products", availableProductsList);
-    }
+//    ProductStorage() {
+//        availableProductsMapForJson.put("products", availableProductsListForJson);
+//    }
 
 
     public String getAllProducts() {
-        List result = new ArrayList();
+        Map<String, List> availableProductsMapForJson = new HashMap<>();
+        List availableProductsListForJson = new ArrayList();
+        availableProductsMapForJson.put("products", availableProductsListForJson);
+
         for (Object[] row : availableProducts) {
             Map<String, Object> storeProduct = new HashMap();
             Product product = (Product) row[0];
@@ -25,20 +29,22 @@ public abstract class ProductStorage {
             storeProduct.put("available", productCount);
             storeProduct.put("price", product.getPrice());
 
-            result.add(storeProduct);
+            availableProductsListForJson.add(storeProduct);
         }
 
-        return listToJson(result);
+        return mapToJson(availableProductsMapForJson);
     }
 
-    public void addProduct(final Product product, Integer count) {
+    public void addProduct(Product product, Integer count) {
         int existingProducts = 0;
         Object[] productFound = availableProducts.stream().filter(row -> row[0] == product).findFirst().orElse(null);
         if (productFound != null) {
             existingProducts = (int) productFound[1];
+            productFound[1] = existingProducts + count;
+        } else {
+            Object[] row = {product, existingProducts + count};
+            availableProducts.add(row);
         }
-        Object[] row = {product, existingProducts + count};
-        availableProducts.add(row);
     }
 
 

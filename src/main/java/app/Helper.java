@@ -9,9 +9,9 @@ import java.util.List;
 import java.util.Map;
 
 public class Helper {
-    private final static Gson gson = new GsonBuilder().disableHtmlEscaping().create();
+    private final static Gson gson = new GsonBuilder().disableHtmlEscaping().setPrettyPrinting().create();
 
-    public static String mapToJson(Map<String, Object> list) {
+    public static String mapToJson(Map<String, List> list) {
         if (list == null) {
             list = Collections.emptyMap();
         }
