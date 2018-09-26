@@ -9,10 +9,6 @@ public abstract class ProductStorage {
      * as an object array with 2 elements: {product, productCount}*/
     private List<Object[]> availableProducts = new ArrayList<>();
 
-//    ProductStorage() {
-//        availableProductsMapForJson.put("products", availableProductsListForJson);
-//    }
-
 
     public String getAllProducts() {
         Map<String, List> availableProductsMapForJson = new HashMap<>();
