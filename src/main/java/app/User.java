@@ -6,6 +6,11 @@ public class User {
     private String email;
     private String passwordHash;
 
+    public User(String email, String password){
+        this.email=email;
+        setPasswordHash(password);
+    }
+
     public String getEmail() {
         return email;
     }
