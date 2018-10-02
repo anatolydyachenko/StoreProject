@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,8 +41,11 @@ public class StoreService {
     @GET
     @Path("getProducts")
     @Produces("application/json")
-    public Response getProducts() {
-        return Response.status(200).entity(store.getAllProducts()).build();
+    public Response getProducts(@Context HttpServletRequest request) {
+        if(request.isRequestedSessionIdValid()){
+            return Response.status(200).entity(store.getAllProducts()).build();
+        }
+        return Response.status(401).entity("You are not authorized").build();
     }
 
     @POST
@@ -80,20 +84,27 @@ public class StoreService {
         }
     }
 
-//    @GET
-//    @Path("logindebug")
-//    public Response getSession(final @Context HttpServletRequest request) {
-//        String lastTime = new Timestamp(request.getSession().getCreationTime()).toString();
-//        return Response.status(200).entity(request.getSession().getId() + " " + lastTime).build();
-//    }
-//
-//    @GET
-//    @Path("login/{sessionId}")
-//    public Response checkSession(@PathParam("sessionId") String sessionId, final @Context HttpServletRequest request) {
-//        Boolean validSession = false;
-//        if (request.getSession(false) != null && request.getSession(false).getId().equals(sessionId)) {
-//            validSession = true;
-//        }
-//        return Response.status(200).entity(validSession.toString()).build();
-//    }
+    @GET
+    @Path("is_session_valid")
+    public Response is_session_valid(final @Context HttpServletRequest request) {
+
+        return Response.status(200).entity(String.valueOf(request.isRequestedSessionIdValid())).build();
+    }
+
+    @GET
+    @Path("get_session")
+    public Response getSession(final @Context HttpServletRequest request) {
+        String lastTime = new Timestamp(request.getSession().getCreationTime()).toString();
+        return Response.status(200).entity(request.getSession().getId() + " " + lastTime).build();
+    }
+
+    @GET
+    @Path("login/{sessionId}")
+    public Response checkSession(@PathParam("sessionId") String sessionId, final @Context HttpServletRequest request) {
+        Boolean validSession = false;
+        if (request.getSession(false) != null && request.getSession(false).getId().equals(sessionId)) {
+            validSession = true;
+        }
+        return Response.status(200).entity(validSession.toString()).build();
+    }
 }

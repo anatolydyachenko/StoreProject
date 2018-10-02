@@ -5,20 +5,17 @@ import java.util.*;
 import static app.Helper.mapToJson;
 
 public abstract class ProductStorage {
-    /*Each record of a List is a row with 2 columns, which are implemented
-     * as an object array with 2 elements: {product, productCount}*/
-    private List<Object[]> availableProducts = new ArrayList<>();
-
+    private Map<Product, Integer> availableProducts = new HashMap<>();
 
     public String getAllProducts() {
         Map<String, List> availableProductsMapForJson = new HashMap<>();
-        List availableProductsListForJson = new ArrayList();
+        List<Map<String, Object>> availableProductsListForJson = new ArrayList<>();
         availableProductsMapForJson.put("products", availableProductsListForJson);
 
-        for (Object[] row : availableProducts) {
-            Map<String, Object> storeProduct = new HashMap();
-            Product product = (Product) row[0];
-            int productCount = (int) row[1];
+        for (Map.Entry<Product, Integer> entry : availableProducts.entrySet()) {
+            Map<String, Object> storeProduct = new HashMap<>();
+            Product product = entry.getKey();
+            int productCount = entry.getValue();
 
             storeProduct.put("id", product.getId());
             storeProduct.put("title", product.getName());
@@ -33,14 +30,27 @@ public abstract class ProductStorage {
 
     public void addProduct(Product product, Integer count) {
         int existingProducts = 0;
-        Object[] productFound = availableProducts.stream().filter(row -> row[0] == product).findFirst().orElse(null);
-        if (productFound != null) {
-            existingProducts = (int) productFound[1];
-            productFound[1] = existingProducts + count;
-        } else {
-            Object[] row = {product, existingProducts + count};
-            availableProducts.add(row);
+        if (availableProducts.containsKey(product)) {
+            existingProducts = availableProducts.get(product);
         }
+        availableProducts.put(product, existingProducts + count);
+    }
+
+    //true if there is enough amount of product
+    public boolean takeProduct(Product product, Integer count) {
+        int existingProducts = 0;
+        if (availableProducts.containsKey(product)) {
+            existingProducts = availableProducts.get(product);
+        }
+
+        if (existingProducts >= count) {
+            if (existingProducts == count) {
+                availableProducts.remove(product);
+            }
+            availableProducts.put(product, existingProducts - count);
+            return true;
+        } else
+            return false;
     }
 
 
