@@ -4,6 +4,7 @@ package service;
 import app.Product;
 import app.Store;
 import app.User;
+import app.UserCart;
 import com.google.gson.JsonObject;
 import com.lambdaworks.crypto.SCryptUtil;
 
@@ -20,8 +21,11 @@ import static app.Helper.parseToJsonObject;
 
 @Path("/")
 public class StoreService {
-    private static Store store = new Store();
     private static List<User> usersRegistered = new ArrayList<>();
+    private static Store store = new Store();
+    private static List<UserCart> userCarts= new ArrayList<>();
+
+
 
     static {
         Product product1 = new Product(1, "Product Name1", 10.1);
@@ -74,7 +78,8 @@ public class StoreService {
         User userFound = usersRegistered.stream().filter(it -> it.getEmail().equals(email)).findFirst().orElse(null);
         if (userFound != null) {
             if (SCryptUtil.check(password, userFound.getPasswordHash())) {
-                return Response.status(200).entity("User with email " + email + " logged in successfully.\nSessionId = " + request.getSession().getId()).build();
+                return Response.status(200).entity("User with email " + email + " logged in successfully.\n" +
+                        "SessionId = " + request.getSession().getId()).build();
             } else {
                 return Response.status(401).entity("Incorrect password for user with email " + email).build();
             }
