@@ -1,10 +1,7 @@
 package service;
 
 
-import app.Product;
-import app.Store;
-import app.User;
-import app.UserCart;
+import app.*;
 import com.google.gson.JsonObject;
 import com.lambdaworks.crypto.SCryptUtil;
 
@@ -23,7 +20,7 @@ import static app.Helper.parseToJsonObject;
 public class StoreService {
     private static List<User> usersRegistered = new ArrayList<>();
     private static Store store = new Store();
-    private static List<UserCart> userCarts= new ArrayList<>();
+    private static List<UserCart> userCarts = new ArrayList<>();
 
 
 

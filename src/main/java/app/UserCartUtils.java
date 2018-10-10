@@ -2,8 +2,6 @@ package app;
 
 import java.util.Map;
 
-import static app.Helper.parseToJsonObject;
-
 public class UserCartUtils {
     private Store store;
 
@@ -11,21 +9,25 @@ public class UserCartUtils {
         this.store = store;
     }
 
-    public boolean putInCart(UserCart userCart, Integer id, Integer quantity) {
-        if (checkProductExistInStore(id, quantity)) {
-            return false;
-        }
-        return false;
+    public boolean putInCart(Cart cart, Integer id, Integer quantity) {
+        Product product = checkProductExistInStore(id, quantity);
+        if (product != null) {
+            if (store.getAvailableProducts().get(product) == quantity){
+
+            }
+            return true;
+        } else return false;
     }
 
-    private boolean checkProductExistInStore(Integer id, Integer quantity) {
-        boolean exists = false;
+    private Product checkProductExistInStore(Integer id, Integer quantity) {
+        Product productsExist = null;
         for (Map.Entry<Product, Integer> entry : store.getAvailableProducts().entrySet()) {
             if (entry.getKey().getId() == id && entry.getValue() >= quantity) {
-                exists = true;
+                productsExist = entry.getKey();
             }
         }
-        return exists;
+        return productsExist;
     }
+
 
 }
