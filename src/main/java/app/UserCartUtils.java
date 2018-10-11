@@ -1,5 +1,9 @@
 package app;
 
+import app.model.UserCart;
+import app.model.Product;
+import app.model.Store;
+
 import java.util.Map;
 
 public class UserCartUtils {
@@ -9,7 +13,7 @@ public class UserCartUtils {
         this.store = store;
     }
 
-    public boolean putInCart(Cart cart, Integer id, Integer quantity) {
+    public boolean putInCart(UserCart cart, Integer id, Integer quantity) {
         Product product = checkProductExistInStore(id, quantity);
         if (product != null) {
             if (store.getAvailableProducts().get(product) == quantity){

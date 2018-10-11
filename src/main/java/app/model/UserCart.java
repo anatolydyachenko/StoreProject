@@ -1,4 +1,4 @@
-package app;
+package app.model;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -7,7 +7,22 @@ import java.util.Map;
 
 import static app.Helper.mapToJson;
 
-public class Cart {
+public class UserCart {
+    private User user;
+    private List<CartItem> cartItems = new ArrayList<>();
+
+    public UserCart(User user) {
+        this.user = user;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
     private Map<Product, Integer> productsInCart = new HashMap<>();
 
     public String getProductsInCart() {

@@ -1,7 +1,10 @@
 package service;
 
 
-import app.*;
+import app.model.Product;
+import app.model.Store;
+import app.model.User;
+import app.model.UserCart;
 import com.google.gson.JsonObject;
 import com.lambdaworks.crypto.SCryptUtil;
 
@@ -12,6 +15,7 @@ import javax.ws.rs.core.Response;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static app.Helper.parseToJsonObject;
 
@@ -21,7 +25,6 @@ public class StoreService {
     private static List<User> usersRegistered = new ArrayList<>();
     private static Store store = new Store();
     private static List<UserCart> userCarts = new ArrayList<>();
-
 
 
     static {
@@ -43,7 +46,7 @@ public class StoreService {
     @Path("getProducts")
     @Produces("application/json")
     public Response getProducts(@Context HttpServletRequest request) {
-        if(request.isRequestedSessionIdValid()){
+        if (request.isRequestedSessionIdValid()) {
             return Response.status(200).entity(store.getAllProducts()).build();
         }
         return Response.status(401).entity("You are not authorized").build();
@@ -75,6 +78,9 @@ public class StoreService {
         User userFound = usersRegistered.stream().filter(it -> it.getEmail().equals(email)).findFirst().orElse(null);
         if (userFound != null) {
             if (SCryptUtil.check(password, userFound.getPasswordHash())) {
+                userCarts.stream()
+                        .filter(it -> it.getUser().equals(userFound))
+                        .findFirst().orElse(null);
                 return Response.status(200).entity("User with email " + email + " logged in successfully.\n" +
                         "SessionId = " + request.getSession().getId()).build();
             } else {
