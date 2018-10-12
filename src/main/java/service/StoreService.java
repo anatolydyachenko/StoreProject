@@ -5,6 +5,7 @@ import app.model.Product;
 import app.model.Store;
 import app.model.User;
 import app.model.UserCart;
+import app.utils.StoreUtils;
 import com.google.gson.JsonObject;
 import com.lambdaworks.crypto.SCryptUtil;
 
@@ -25,20 +26,21 @@ public class StoreService {
     private static List<User> usersRegistered = new ArrayList<>();
     private static Store store = new Store();
     private static List<UserCart> userCarts = new ArrayList<>();
+    private static StoreUtils storeUtils;
 
+    StoreService(){
+        storeUtils = new StoreUtils(store);
+    }
 
     static {
         Product product1 = new Product(1, "Product Name1", 10.1);
         Product product2 = new Product(2, "Product Name2", 20.0);
+        User admin = new User("admin", "admin");
 
-        store.addProduct(product1, 1);
-        System.out.println(store.getAllProducts());
-
-        store.addProduct(product2, 2);
-        System.out.println(store.getAllProducts());
-
-        store.addProduct(product1, 5);
-        System.out.println(store.getAllProducts());
+        storeUtils.addProduct(product1, 1);
+        storeUtils.addProduct(product2, 2);
+        storeUtils.addProduct(product1, 5);
+        usersRegistered.add(admin);
     }
 
 
@@ -47,7 +49,7 @@ public class StoreService {
     @Produces("application/json")
     public Response getProducts(@Context HttpServletRequest request) {
         if (request.isRequestedSessionIdValid()) {
-            return Response.status(200).entity(store.getAllProducts()).build();
+            return Response.status(200).entity(storeUtils.getAllProducts()).build();
         }
         return Response.status(401).entity("You are not authorized").build();
     }
@@ -71,24 +73,32 @@ public class StoreService {
     @POST
     @Path("login")
     public Response login(final @Context HttpServletRequest request, String credentials) {
-        JsonObject loginJson = parseToJsonObject(credentials);
-        String email = loginJson.get("email").getAsString();
-        String password = loginJson.get("password").getAsString();
+        if (!request.isRequestedSessionIdValid()) {
+            JsonObject loginJson = parseToJsonObject(credentials);
+            String email = loginJson.get("email").getAsString();
+            String password = loginJson.get("password").getAsString();
 
-        User userFound = usersRegistered.stream().filter(it -> it.getEmail().equals(email)).findFirst().orElse(null);
-        if (userFound != null) {
-            if (SCryptUtil.check(password, userFound.getPasswordHash())) {
-                userCarts.stream()
-                        .filter(it -> it.getUser().equals(userFound))
-                        .findFirst().orElse(null);
-                return Response.status(200).entity("User with email " + email + " logged in successfully.\n" +
-                        "SessionId = " + request.getSession().getId()).build();
+            User userFound = usersRegistered.stream().filter(it -> it.getEmail().equals(email)).findFirst().orElse(null);
+            if (userFound != null) {
+                if (SCryptUtil.check(password, userFound.getPasswordHash())) {
+                    UserCart userCart = userCarts.stream().filter(it -> it.getUser().equals(userFound))
+                            .findFirst().orElse(null);
+                    //create empty cart for user if it's first login or if previous session is expired
+                    if (userCart == null || !request.isRequestedSessionIdValid()) {
+                        userCart = new UserCart(userFound);
+                    }
+                    userCarts.add(userCart);
+                    return Response.status(200).entity("User with email " + email + " logged in successfully.\n" +
+                            "SessionId = " + request.getSession().getId()).build();
+                } else {
+                    return Response.status(401).entity("Incorrect password for user with email " + email).build();
+                }
+
             } else {
-                return Response.status(401).entity("Incorrect password for user with email " + email).build();
+                return Response.status(401).entity("User with email " + email + " is not registered.").build();
             }
-
         } else {
-            return Response.status(401).entity("User with email " + email + " is not registered.").build();
+            return Response.status(401).entity("Your session is valid, no need to login.").build();
         }
     }
 
