@@ -6,21 +6,34 @@ import java.sql.DriverManager;
 
 public class DBClient {
 
-    private static Connection conn;
+    protected static Connection conn = getConnection();
 
     public static Connection getConnection() {
         if (conn == null) {
             try {
+                Class.forName("org.h2.Driver");
                 conn = DriverManager.getConnection("jdbc:h2:./src/main/java/db/ShopDB;" +
                                 "INIT=" +
-                                "RUNSCRIPT FROM './src/main/java/db/schema.sql'\\;" +
-                                "RUNSCRIPT FROM './src/main/java/db/data.sql'",
+                                "RUNSCRIPT FROM 'classpath:schema.sql'\\;" +
+                                "RUNSCRIPT FROM 'classpath:data.sql'",
                         "sa", "");
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                closeConnection();
+            }
+        }
+        return conn;
+    }
+
+    private static void closeConnection() {
+        if (conn != null) {
+            try {
+                conn.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
         }
-        return conn;
     }
 
     public static void main(String[] args) {
