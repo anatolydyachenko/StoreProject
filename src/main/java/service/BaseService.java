@@ -6,6 +6,7 @@ import app.model.User;
 import app.model.UserCart;
 import db.DBClient;
 
+import javax.ws.rs.Path;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;

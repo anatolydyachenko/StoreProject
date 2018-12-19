@@ -1,44 +1,14 @@
 package service;
 
-import app.model.Product;
-import app.model.Store;
-import app.model.User;
-import app.model.UserCart;
-import com.google.gson.JsonObject;
-import com.lambdaworks.crypto.SCryptUtil;
-
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.*;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
-
-import static app.Helper.parseToJsonObject;
-
-
 
 @Path("/")
-public class StoreService extends BaseService{
-
-//    private static List<User> usersRegistered = new ArrayList<>();
-//    private static Store store = new Store();
-//    private static List<UserCart> userCarts = new ArrayList<>();
-//
-//
-//    static {
-//        Product product1 = new Product(1, "Product Name1", 10.1);
-//        Product product2 = new Product(2, "Product Name2", 20.0);
-//        User admin = new User("admin", "admin");
-//
-//        store.addProduct(product1, 1);
-//        store.addProduct(product2, 2);
-//        store.addProduct(product1, 5);
-//
-//        usersRegistered.add(admin);
-//    }
-
+public class StoreService extends BaseService {
 
     @GET
     @Path("getProducts")

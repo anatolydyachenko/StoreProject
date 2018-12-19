@@ -1,14 +1,12 @@
 package app.model;
 
-import com.lambdaworks.crypto.SCryptUtil;
-
 public class User {
     private String email;
     private String passwordHash;
 
-    public User(String email, String password){
+    public User(String email, String passwordHash){
         this.email=email;
-        setPasswordHash(password);
+        this.passwordHash=passwordHash;
     }
 
     public String getEmail() {
@@ -24,6 +22,6 @@ public class User {
     }
 
     public void setPasswordHash(String password) {
-        this.passwordHash = SCryptUtil.scrypt(password, 16, 16, 16);
+        this.passwordHash = password;
     }
 }

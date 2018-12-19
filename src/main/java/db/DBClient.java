@@ -1,5 +1,9 @@
 package db;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.sql.*;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -12,15 +16,15 @@ public class DBClient {
         if (conn == null) {
             try {
                 Class.forName("org.h2.Driver");
-                conn = DriverManager.getConnection("jdbc:h2:./src/main/java/db/ShopDB;" +
-                                "INIT=" +
-                                "RUNSCRIPT FROM 'classpath:schema.sql'\\;" +
-                                "RUNSCRIPT FROM 'classpath:data.sql'",
-                        "sa", "");
+                conn = DriverManager.getConnection("jdbc:h2:C:/Users/adyachenko/IdeaProjects/StoreProject/src/main/java/db/ShopDB;"
+//                                +
+//                                "INIT=" +
+//                                "RUNSCRIPT FROM 'C:/Users/adyachenko/IdeaProjects/StoreProject/src/main/java/db/init/schema.sql'\\;" +
+//                                "RUNSCRIPT FROM 'C:/Users/adyachenko/IdeaProjects/StoreProject/src/main/java/db/init/data.sql'"
+                        , "sa", "");
+                prepareDB(conn);
             } catch (Exception e) {
                 e.printStackTrace();
-            } finally {
-                closeConnection();
             }
         }
         return conn;
@@ -34,6 +38,27 @@ public class DBClient {
                 e.printStackTrace();
             }
         }
+    }
+
+    private static void prepareDB(Connection conn){
+        try (Statement st = conn.createStatement()) {
+            if (!st.executeQuery("SELECT * FROM INFORMATION_SCHEMA.TABLES where table_type = 'TABLE' and table_name = 'PRODUCT'").next()) {
+                st.execute(getSql("C:/Users/adyachenko/IdeaProjects/StoreProject/src/main/java/db/init/schema.sql"));
+                st.execute(getSql("C:/Users/adyachenko/IdeaProjects/StoreProject/src/main/java/db/init/data.sql"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static String getSql(String sqlName) {
+        String result = "";
+        try {
+            result = new String(Files.readAllBytes(Paths.get(sqlName)));
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+        return result;
     }
 
     public static void main(String[] args) {
