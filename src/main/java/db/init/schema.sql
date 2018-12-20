@@ -19,7 +19,7 @@ create table product
 
 create table cart
 (
-session_id varchar(255) not null,
+session_id varchar not null,
 product_id integer not null,
 quantity integer not null,
 

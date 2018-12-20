@@ -1,5 +1,8 @@
 package db;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -59,6 +62,11 @@ public class DBClient {
             e.printStackTrace();
         }
         return result;
+    }
+
+    protected static String objectToJson(Object object){
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        return gson.toJson(object);
     }
 
     public static void main(String[] args) {

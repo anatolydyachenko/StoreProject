@@ -43,13 +43,9 @@ public class UserService extends BaseService {
         String password = loginJson.get("password").getAsString();
 
         boolean userExists = UserDB.userExists(email);
-//        User userFound = usersRegistered.stream().filter(it -> it.getEmail().equals(email)).findFirst().orElse(null);
         if (userExists) {
             User user = UserDB.getUser(email);
             if (SCryptUtil.check(password, user.getPasswordHash())) {
-//                userCarts.stream()
-//                        .filter(it -> it.getUser().equals(user))
-//                        .findFirst().orElse(null);
                 return Response.status(200).entity("User with email " + email + " logged in successfully.\n" +
                         "SessionId = " + request.getSession().getId()).build();
             } else {
@@ -75,13 +71,13 @@ public class UserService extends BaseService {
         return Response.status(200).entity(request.getSession().getId() + " " + lastTime).build();
     }
 
-    @GET
-    @Path("login/{sessionId}")
-    public Response checkSession(@PathParam("sessionId") String sessionId, final @Context HttpServletRequest request) {
-        Boolean validSession = false;
-        if (request.getSession(false) != null && request.getSession(false).getId().equals(sessionId)) {
-            validSession = true;
-        }
-        return Response.status(200).entity(validSession.toString()).build();
-    }
+//    @GET
+//    @Path("login/{sessionId}")
+//    public Response checkSession(@PathParam("sessionId") String sessionId, final @Context HttpServletRequest request) {
+//        Boolean validSession = false;
+//        if (request.getSession(false) != null && request.getSession(false).getId().equals(sessionId)) {
+//            validSession = true;
+//        }
+//        return Response.status(200).entity(validSession.toString()).build();
+//    }
 }
