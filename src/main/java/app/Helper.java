@@ -2,6 +2,9 @@ package app;
 
 import com.google.gson.*;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -22,4 +25,18 @@ public class Helper {
         return jsonelement.getAsJsonObject();
     }
 
+    public static String getSql(String sqlName) {
+        String result = "";
+        try {
+            result = new String(Files.readAllBytes(Paths.get(sqlName)));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    public static String objectToJson(Object object) {
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        return gson.toJson(object);
+    }
 }

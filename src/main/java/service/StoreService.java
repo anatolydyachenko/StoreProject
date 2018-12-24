@@ -1,8 +1,6 @@
 package service;
 
-import app.Helper;
 import com.google.gson.JsonObject;
-import db.DBClient;
 import db.requests.StoreDB;
 
 import javax.servlet.http.HttpServletRequest;
@@ -12,7 +10,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
-
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
@@ -30,6 +27,7 @@ public class StoreService extends BaseService {
         }
         return Response.status(401).entity("You are not authorized").build();
     }
+
 
     @POST
     @Path("addProduct")

@@ -1,5 +1,6 @@
 package db.requests;
 
+import app.Helper;
 import app.model.Product;
 import db.DBClient;
 
@@ -13,25 +14,6 @@ import java.util.List;
 import java.util.Map;
 
 public class StoreDB extends DBClient {
-    public static String getAllProducts() {
-        List<Map<String, Object>> allProducts = new ArrayList<>();
-
-        try (Statement st = conn.createStatement();
-             ResultSet rs = st.executeQuery("SELECT PRODUCT_ID, TITLE, PRICE, QUANTITY FROM PRODUCT")) {
-
-            while (rs.next()) {
-                Map<String, Object> productMap = new HashMap<>();
-                productMap.put("product_id", rs.getInt("PRODUCT_ID"));
-                productMap.put("title", rs.getString("TITLE"));
-                productMap.put("price", rs.getDouble("PRICE"));
-                productMap.put("quantity", rs.getInt("QUANTITY"));
-                allProducts.add(productMap);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return objectToJson(allProducts);
-    }
 
     public static void addProductInStore(Product product, int count) {
         try (PreparedStatement st = conn.prepareStatement("INSERT INTO PRODUCT (title, quantity, price) VALUES (?,?,?)")) {
@@ -57,4 +39,23 @@ public class StoreDB extends DBClient {
     }
 
 
+    public static String getAllProducts() {
+        List<Map<String, Object>> allProducts = new ArrayList<>();
+
+        try (Statement st = conn.createStatement();
+             ResultSet rs = st.executeQuery("SELECT PRODUCT_ID, TITLE, PRICE, QUANTITY FROM PRODUCT")) {
+
+            while (rs.next()) {
+                Map<String, Object> productMap = new HashMap<>();
+                productMap.put("product_id", rs.getInt("PRODUCT_ID"));
+                productMap.put("title", rs.getString("TITLE"));
+                productMap.put("price", rs.getDouble("PRICE"));
+                productMap.put("quantity", rs.getInt("QUANTITY"));
+                allProducts.add(productMap);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return Helper.objectToJson(allProducts);
+    }
 }
