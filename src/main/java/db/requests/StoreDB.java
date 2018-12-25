@@ -2,6 +2,7 @@ package db.requests;
 
 import app.Helper;
 import app.model.Product;
+import app.model.Store;
 import db.DBClient;
 
 import java.sql.PreparedStatement;
@@ -16,23 +17,24 @@ import java.util.Map;
 public class StoreDB extends DBClient {
 
     public String getAllProducts() {
-        List<Map<String, Object>> allProducts = new ArrayList<>();
+        Store store = new Store();
 
         try (Statement st = conn.createStatement();
              ResultSet rs = st.executeQuery("SELECT PRODUCT_ID, TITLE, PRICE, QUANTITY FROM PRODUCT")) {
 
             while (rs.next()) {
-                Map<String, Object> productMap = new HashMap<>();
-                productMap.put("product_id", rs.getInt("PRODUCT_ID"));
-                productMap.put("title", rs.getString("TITLE"));
-                productMap.put("price", rs.getDouble("PRICE"));
-                productMap.put("quantity", rs.getInt("QUANTITY"));
-                allProducts.add(productMap);
+                Product product = new Product(
+                        rs.getInt("PRODUCT_ID"),
+                        rs.getString("TITLE"),
+                        rs.getDouble("PRICE"),
+                        rs.getInt("QUANTITY")
+                        );
+                store.addProduct(product);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return Helper.objectToJson(allProducts);
+        return Helper.objectToJson(store);
     }
 
     public void addProduct(String title, double price, int quantity) {

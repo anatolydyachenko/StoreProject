@@ -1,15 +1,16 @@
 package app.model;
 
-import java.util.*;
-
-import static app.Helper.mapToJson;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Store {
-    private Map<Product, Integer> availableProducts = new HashMap<>();
+    private List<Product> products;
 
-    public Map<Product, Integer> getAvailableProducts(){
-        return  availableProducts;
+    public Store() {
+        products = new ArrayList<>();
     }
 
-
+    public void addProduct(Product product) {
+        products.add(product);
+    }
 }
