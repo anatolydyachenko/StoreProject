@@ -38,7 +38,7 @@ public class UserCart {
             double subtotal = product.getPrice() * productCount;
 
             productQuantity.put("id", product.getId());
-            productQuantity.put("title", product.getName());
+            productQuantity.put("title", product.getTitle());
             productQuantity.put("quantity", productCount);
             productQuantity.put("price", product.getPrice());
             productQuantity.put("subtotal", subtotal);
@@ -49,16 +49,5 @@ public class UserCart {
         return mapToJson(cartMapForJson);
     }
 
-    private void putProductInCart(Product product, Integer quantity) {
-        int existingProducts = 0;
-        if (productsInCart.containsKey(product)) {
-            existingProducts = productsInCart.get(product);
-        }
-        productsInCart.put(product, existingProducts + quantity);
-    }
-
-    public boolean changeProductsQuantity(Integer id, Integer quantity) {
-        return false;
-    }
 
 }

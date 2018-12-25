@@ -33,15 +33,15 @@ public class DBClient {
         return conn;
     }
 
-    private void closeConnection() {
-        if (conn != null) {
-            try {
-                conn.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-    }
+//    private void closeConnection() {
+//        if (conn != null) {
+//            try {
+//                conn.close();
+//            } catch (SQLException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//    }
 
     private static void prepareDB(Connection conn) {
         try (Statement st = conn.createStatement()) {

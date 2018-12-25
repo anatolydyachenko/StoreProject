@@ -15,30 +15,6 @@ import java.util.Map;
 
 public class StoreDB extends DBClient {
 
-    public void addProductInStore(Product product, int count) {
-        try (PreparedStatement st = conn.prepareStatement("INSERT INTO PRODUCT (title, quantity, price) VALUES (?,?,?)")) {
-            st.setString(1, product.getName());
-            st.setInt(2, count);
-            st.setDouble(3, product.getPrice());
-            st.execute();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public boolean productExist(int productId, int count) {
-        boolean productExist = false;
-        try (PreparedStatement st = conn.prepareStatement("SELECT PRODUCT_ID, QUANTITY FROM PRODUCT WHERE PRODUCT_ID = ? AND QUANTITY >= ?")) {
-            st.setInt(1, productId);
-            st.setInt(2, count);
-            productExist = st.executeQuery().next();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return productExist;
-    }
-
-
     public String getAllProducts() {
         List<Map<String, Object>> allProducts = new ArrayList<>();
 

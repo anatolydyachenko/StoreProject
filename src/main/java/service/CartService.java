@@ -1,7 +1,6 @@
 package service;
 
-import com.google.gson.JsonObject;
-import db.requests.CartDB;
+import app.model.Product;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
@@ -11,24 +10,16 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 
-import static app.Helper.parseToJsonObject;
-
 @Path("cart")
 public class CartService extends BaseService {
 
     @POST
     @Path("addProduct")
-    public Response addProduct(@Context HttpServletRequest request, String product) {
+    public Response addProduct(@Context HttpServletRequest request, String productJson) {
         if (request.isRequestedSessionIdValid()) {
-            boolean isAdded;
+            Product product = gson.fromJson(productJson, Product.class);
 
-            JsonObject requestJson = parseToJsonObject(product);
-            int productId = requestJson.get("id").getAsInt();
-            int quantity = requestJson.get("quantity").getAsInt();
-
-            isAdded = cartDB.modifyProductsInCart(productId, quantity, request.getRequestedSessionId());
-
-            if (isAdded) {
+            if (cartController.modifyProductsInCart(product, request.getRequestedSessionId())) {
                 return Response.status(200).entity("Product is updated (added/modified/deleted).").build();
             } else {
                 return Response.status(400).entity("Products are not updated (no such amount in store).").build();
@@ -39,14 +30,24 @@ public class CartService extends BaseService {
         return Response.status(401).entity("You are not authorized").build();
     }
 
+    @POST
+    @Path("removeProduct")
+    public Response removeProduct(@Context HttpServletRequest request, Product product){
+        if (request.isRequestedSessionIdValid()) {
+            if(cartController.removeProduct(product, request.getRequestedSessionId())){
+                return Response.status(200).entity("Product is deleted.").build();
+            }
+            return Response.status(400).entity("Product is NOT deleted.").build();
+        }
+        return Response.status(401).entity("You are not authorized").build();
+    }
+
     @GET
     @Path("getProducts")
     @Produces("application/json")
     public Response getProducts(@Context HttpServletRequest request) {
         if (request.isRequestedSessionIdValid()) {
-            String sessionId = request.getSession().getId();
-
-            return Response.status(200).entity(cartDB.getAllProducts(request.getRequestedSessionId())).build();
+            return Response.status(200).entity(cartController.getAllProducts(request.getRequestedSessionId())).build();
         }
         return Response.status(401).entity("You are not authorized").build();
     }
@@ -55,8 +56,7 @@ public class CartService extends BaseService {
     @Path("checkout")
     public Response checkout(@Context HttpServletRequest request) {
         if (request.isRequestedSessionIdValid()) {
-            String sessionId = request.getRequestedSessionId();
-            if (cartDB.checkout(sessionId)) {
+            if (cartController.checkout(request.getRequestedSessionId())) {
                 return Response.status(200).entity("Checkout completed.").build();
             }
             return Response.status(200).entity("Checkout failed").build();

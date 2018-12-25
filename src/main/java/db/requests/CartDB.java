@@ -106,7 +106,7 @@ public class CartDB extends DBClient {
         return Helper.objectToJson(result);
     }
 
-    private boolean removeProduct(int productId, String sessioId) {
+    public boolean removeProduct(int productId, String sessioId) {
         boolean result = false;
 
         try (PreparedStatement st = conn.prepareStatement("DELETE FROM CART WHERE PRODUCT_ID = ? AND SESSION_ID LIKE ?")) {

@@ -1,5 +1,7 @@
 package service;
 
+import app.model.Product;
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import db.requests.StoreDB;
 
@@ -21,7 +23,7 @@ public class StoreService extends BaseService {
     @Produces("application/json")
     public Response getProducts(@Context HttpServletRequest request) {
         if (request.isRequestedSessionIdValid()) {
-            return Response.status(200).entity(storeDB.getAllProducts()).build();
+            return Response.status(200).entity(storeController.getAllProducts()).build();
         }
         return Response.status(401).entity("You are not authorized").build();
     }
@@ -29,13 +31,9 @@ public class StoreService extends BaseService {
 
     @POST
     @Path("addProduct")
-    public Response addProduct(String products) {
-        JsonObject requestJson = parseToJsonObject(products);
-        String title = requestJson.get("title").getAsString();
-        double price = requestJson.get("price").getAsDouble();
-        int quantity = requestJson.get("quantity").getAsInt();
-
-        storeDB.addProduct(title, price, quantity);
+    public Response addProduct(String productJson) {
+        Product product = gson.fromJson(productJson, Product.class);
+        storeController.addProduct(product);
         return Response.status(200).entity("Product added").build();
     }
 
