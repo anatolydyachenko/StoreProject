@@ -15,7 +15,7 @@ import java.util.Map;
 
 public class StoreDB extends DBClient {
 
-    public static void addProductInStore(Product product, int count) {
+    public void addProductInStore(Product product, int count) {
         try (PreparedStatement st = conn.prepareStatement("INSERT INTO PRODUCT (title, quantity, price) VALUES (?,?,?)")) {
             st.setString(1, product.getName());
             st.setInt(2, count);
@@ -26,7 +26,7 @@ public class StoreDB extends DBClient {
         }
     }
 
-    public static boolean productExist(int productId, int count) {
+    public boolean productExist(int productId, int count) {
         boolean productExist = false;
         try (PreparedStatement st = conn.prepareStatement("SELECT PRODUCT_ID, QUANTITY FROM PRODUCT WHERE PRODUCT_ID = ? AND QUANTITY >= ?")) {
             st.setInt(1, productId);
@@ -39,7 +39,7 @@ public class StoreDB extends DBClient {
     }
 
 
-    public static String getAllProducts() {
+    public String getAllProducts() {
         List<Map<String, Object>> allProducts = new ArrayList<>();
 
         try (Statement st = conn.createStatement();
@@ -57,5 +57,16 @@ public class StoreDB extends DBClient {
             e.printStackTrace();
         }
         return Helper.objectToJson(allProducts);
+    }
+
+    public void addProduct(String title, double price, int quantity) {
+        try (PreparedStatement st = conn.prepareStatement("INSERT INTO PRODUCT (TITLE, PRICE, QUANTITY) VALUES (?,?,?)")) {
+            st.setString(1, title);
+            st.setDouble(2, price);
+            st.setInt(3, quantity);
+            st.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }

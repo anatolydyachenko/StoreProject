@@ -9,7 +9,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import java.sql.Timestamp;
@@ -26,11 +25,11 @@ public class UserService extends BaseService {
         String email = requestJson.get("email").getAsString();
         String password = requestJson.get("password").getAsString();
 
-        boolean userExists = UserDB.userExists(email);
+        boolean userExists = userDB.userExists(email);
         if (userExists) {
             return Response.status(409).entity("User with email " + email + " already exists.").build();
         } else {
-            UserDB.addUser(email, password);
+            userDB.addUser(email, password);
             return Response.status(200).entity("User with email " + email + " is created.").build();
         }
     }
@@ -42,9 +41,9 @@ public class UserService extends BaseService {
         String email = loginJson.get("email").getAsString();
         String password = loginJson.get("password").getAsString();
 
-        boolean userExists = UserDB.userExists(email);
+        boolean userExists = userDB.userExists(email);
         if (userExists) {
-            User user = UserDB.getUser(email);
+            User user = userDB.getUser(email);
             if (SCryptUtil.check(password, user.getPasswordHash())) {
                 return Response.status(200).entity("User with email " + email + " logged in successfully.\n" +
                         "SessionId = " + request.getSession().getId()).build();

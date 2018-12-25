@@ -13,7 +13,7 @@ import java.util.Map;
 
 public class CartDB extends DBClient {
 
-    public static boolean modifyProductsInCart(int productId, int quantity, String sessionId) {
+    public boolean modifyProductsInCart(int productId, int quantity, String sessionId) {
         boolean modified = false;
 
         if (quantity == 0) {
@@ -57,7 +57,7 @@ public class CartDB extends DBClient {
         return modified;
     }
 
-    private static Integer numberOfProductsInCart(int productId, String sessionId) {
+    private Integer numberOfProductsInCart(int productId, String sessionId) {
         Integer quantity = null;
         try (PreparedStatement st = conn.prepareStatement("SELECT QUANTITY FROM CART WHERE PRODUCT_ID = ? AND SESSION_ID LIKE ?")) {
             st.setInt(1, productId);
@@ -73,7 +73,7 @@ public class CartDB extends DBClient {
         return quantity;
     }
 
-    public static String getAllProducts(String sessionId) {
+    public String getAllProducts(String sessionId) {
         Map<String, Object> result = new HashMap<>();
         List<Map<String, Object>> products = new ArrayList<>();
         float total = 0;
@@ -106,7 +106,7 @@ public class CartDB extends DBClient {
         return Helper.objectToJson(result);
     }
 
-    private static boolean removeProduct(int productId, String sessioId) {
+    private boolean removeProduct(int productId, String sessioId) {
         boolean result = false;
 
         try (PreparedStatement st = conn.prepareStatement("DELETE FROM CART WHERE PRODUCT_ID = ? AND SESSION_ID LIKE ?")) {
@@ -120,7 +120,7 @@ public class CartDB extends DBClient {
         return result;
     }
 
-    private static boolean allowCheckout(String sessionId) {
+    private boolean allowCheckout(String sessionId) {
         boolean allowCheckout = true;
         try (PreparedStatement st = conn.prepareStatement(
                 "SELECT C.PRODUCT_ID AS cart_product, C.QUANTITY AS cart_quantity, P.PRODUCT_ID AS store_product, P.QUANTITY AS store_quantity\n" +
@@ -142,7 +142,7 @@ public class CartDB extends DBClient {
         return allowCheckout;
     }
 
-    public static void clearCart(String sessionId) {
+    public void clearCart(String sessionId) {
         try (PreparedStatement st = conn.prepareStatement("DELETE FROM CART WHERE SESSION_ID LIKE ?")) {
             st.setString(1, sessionId);
             st.execute();
@@ -151,7 +151,7 @@ public class CartDB extends DBClient {
         }
     }
 
-    public static boolean checkout(String sessionId) {
+    public boolean checkout(String sessionId) {
         boolean result = false;
         if (allowCheckout(sessionId)) {
             try (PreparedStatement st = conn.prepareStatement("SELECT PRODUCT_ID AS cart_product, QUANTITY AS cart_quantity " +

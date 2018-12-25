@@ -13,9 +13,9 @@ import java.util.Map;
 
 public class DBClient {
 
-    protected static Connection conn = getConnection();
+    protected Connection conn = getConnection();
 
-    public static Connection getConnection() {
+    public Connection getConnection() {
         if (conn == null) {
             try {
                 Class.forName("org.h2.Driver");
@@ -33,7 +33,7 @@ public class DBClient {
         return conn;
     }
 
-    private static void closeConnection() {
+    private void closeConnection() {
         if (conn != null) {
             try {
                 conn.close();

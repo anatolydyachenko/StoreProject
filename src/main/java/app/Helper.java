@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 public class Helper {
-    private final static Gson gson = new GsonBuilder().disableHtmlEscaping().setPrettyPrinting().create();
+    private final static Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
     public static String mapToJson(Map<String, Object> list) {
         if (list == null) {
@@ -20,7 +20,7 @@ public class Helper {
         return gson.toJson(list);
     }
 
-    public static JsonObject parseToJsonObject (String jsonString){
+    public static JsonObject parseToJsonObject(String jsonString) {
         JsonElement jsonelement = new JsonParser().parse(jsonString);
         return jsonelement.getAsJsonObject();
     }
@@ -36,7 +36,9 @@ public class Helper {
     }
 
     public static String objectToJson(Object object) {
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        if (object == null) {
+            object = Collections.emptyMap();
+        }
         return gson.toJson(object);
     }
 }
