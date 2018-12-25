@@ -1,12 +1,9 @@
-package service;
+package shop.service;
 
 import com.google.gson.Gson;
-import controller.CartController;
-import controller.StoreController;
-import controller.UserController;
-import db.requests.CartDB;
-import db.requests.StoreDB;
-import db.requests.UserDB;
+import shop.controller.CartController;
+import shop.controller.StoreController;
+import shop.controller.UserController;
 
 abstract public class BaseService {
     public final static Gson gson = new Gson();

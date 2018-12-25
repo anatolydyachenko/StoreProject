@@ -1,15 +1,10 @@
-package db;
+package shop.db;
 
-import app.Helper;
-import db.requests.StoreDB;
+import shop.app.Helper;
 
 import java.sql.*;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class DBClient {
 

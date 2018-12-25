@@ -1,8 +1,8 @@
-package controller;
+package shop.controller;
 
-import db.requests.CartDB;
-import db.requests.StoreDB;
-import db.requests.UserDB;
+import shop.db.requests.CartDB;
+import shop.db.requests.StoreDB;
+import shop.db.requests.UserDB;
 
 public class Controller {
     StoreDB storeDB;

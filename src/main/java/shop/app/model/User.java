@@ -1,4 +1,4 @@
-package app.model;
+package shop.app.model;
 
 public class User {
     private String email;

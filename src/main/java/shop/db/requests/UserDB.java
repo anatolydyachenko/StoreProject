@@ -1,8 +1,8 @@
-package db.requests;
+package shop.db.requests;
 
-import app.model.User;
+import shop.app.model.User;
 import com.lambdaworks.crypto.SCryptUtil;
-import db.DBClient;
+import shop.db.DBClient;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

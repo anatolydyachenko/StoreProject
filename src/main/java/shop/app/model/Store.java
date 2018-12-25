@@ -1,4 +1,4 @@
-package app.model;
+package shop.app.model;
 
 import java.util.ArrayList;
 import java.util.List;

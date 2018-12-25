@@ -1,6 +1,6 @@
-package controller;
+package shop.controller;
 
-import app.model.Product;
+import shop.app.model.Product;
 
 public class CartController extends Controller {
 

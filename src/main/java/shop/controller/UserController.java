@@ -1,6 +1,6 @@
-package controller;
+package shop.controller;
 
-import app.model.User;
+import shop.app.model.User;
 import com.lambdaworks.crypto.SCryptUtil;
 
 public class UserController extends Controller {

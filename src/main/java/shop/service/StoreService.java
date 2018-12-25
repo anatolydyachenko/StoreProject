@@ -1,9 +1,6 @@
-package service;
+package shop.service;
 
-import app.model.Product;
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import db.requests.StoreDB;
+import shop.app.model.Product;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
@@ -13,7 +10,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 
-import static app.Helper.parseToJsonObject;
+import static shop.app.Helper.parseToJsonObject;
 
 @Path("/store")
 public class StoreService extends BaseService {

@@ -1,7 +1,7 @@
-package db.requests;
+package shop.db.requests;
 
-import app.Helper;
-import db.DBClient;
+import shop.app.Helper;
+import shop.db.DBClient;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

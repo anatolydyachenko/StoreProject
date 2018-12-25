@@ -1,6 +1,6 @@
-package service;
+package shop.service;
 
-import app.model.Product;
+import shop.app.model.Product;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;

@@ -1,18 +1,14 @@
-package db.requests;
+package shop.db.requests;
 
-import app.Helper;
-import app.model.Product;
-import app.model.Store;
-import db.DBClient;
+import shop.app.Helper;
+import shop.app.model.Product;
+import shop.app.model.Store;
+import shop.db.DBClient;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class StoreDB extends DBClient {
 

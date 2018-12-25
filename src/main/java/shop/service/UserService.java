@@ -1,6 +1,6 @@
-package service;
+package shop.service;
 
-import app.model.User;
+import shop.app.model.User;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.POST;
