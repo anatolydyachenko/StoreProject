@@ -1,5 +1,6 @@
 package shop.service;
 
+import shop.app.dto.ProductDto;
 import shop.app.model.Product;
 
 import javax.servlet.http.HttpServletRequest;
@@ -17,7 +18,7 @@ public class CartService extends BaseService {
     @Path("addProduct")
     public Response addProduct(@Context HttpServletRequest request, String productJson) {
         if (request.isRequestedSessionIdValid()) {
-            Product product = gson.fromJson(productJson, Product.class);
+            ProductDto product = gson.fromJson(productJson, ProductDto.class);
 
             if (cartController.modifyProductsInCart(product, request.getRequestedSessionId())) {
                 return Response.status(200).entity("Product is updated (added/modified/deleted).").build();

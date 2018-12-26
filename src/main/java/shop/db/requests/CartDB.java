@@ -1,6 +1,7 @@
 package shop.db.requests;
 
 import shop.app.Helper;
+import shop.app.model.Product;
 import shop.db.DBClient;
 
 import java.sql.PreparedStatement;
@@ -46,6 +47,8 @@ public class CartDB extends DBClient {
 
                             modified = true;
                             insertProduct.close();
+                        } else {
+                            throw new Error("There is not enough products in the store.");
                         }
                     }
                 }
@@ -175,5 +178,28 @@ public class CartDB extends DBClient {
         }
         return result;
 
+    }
+
+    public Product getProductById(int productId, String sessionId) {
+        try (PreparedStatement st = conn.prepareStatement(
+                             "SELECT P.PRODUCT_ID, P.TITLE, P.PRICE, P.QUANTITY " +
+                             "FROM CART C join PRODUCT P on C.PRODUCT_ID=P.PRODUCT_ID " +
+                                     "WHERE C.PRODUCT_ID = ? AND C.SESSION_ID LIKE ?")) {
+            st.setInt(1, productId);
+            st.setString(2, sessionId);
+            try(ResultSet rs = st.executeQuery()){
+                if (rs.next()){
+                    return new Product(
+                            rs.getInt("PRODUCT_ID"),
+                            rs.getString("TITLE"),
+                            rs.getDouble("PRICE"),
+                            rs.getInt("QUANTITY")
+                            );
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

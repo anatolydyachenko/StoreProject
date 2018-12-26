@@ -1,10 +1,11 @@
 package shop.controller;
 
+import shop.app.dto.ProductDto;
 import shop.app.model.Product;
 
 public class CartController extends Controller {
 
-    public boolean modifyProductsInCart(Product product, String sessionId) {
+    public boolean modifyProductsInCart(ProductDto product, String sessionId) {
         return cartDB.modifyProductsInCart(product.getId(), product.getQuantity(), sessionId);
     }
 
